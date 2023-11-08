@@ -6,11 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 
 public class InterfazInicioSesion {
     private JFrame ventanaInicio;
     private Map<String, String> usuariosRegistrados;
-     private List<String> enviosSolicitados;
+    private List<String> enviosSolicitados;
 
     public InterfazInicioSesion() {
         usuariosRegistrados = new HashMap<>();
@@ -20,43 +24,52 @@ public class InterfazInicioSesion {
     public void mostrarVentanaInicioSesion() {
         ventanaInicio = new JFrame("Iniciar Sesión");
         ventanaInicio.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ventanaInicio.setSize(300, 200);
+        ventanaInicio.setSize(350, 200);
         ventanaInicio.setLocationRelativeTo(null);
 
-        JTextField campoCorreo = new JTextField(20);
-        JPasswordField campoContraseña = new JPasswordField(20);
-        JButton botonIniciarSesion = new JButton("Iniciar Sesión");
-        JButton botonRegistrarse = new JButton("Registrarse");
-
-        botonIniciarSesion.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String correo = campoCorreo.getText();
-                String contraseña = new String(campoContraseña.getPassword());
-
-                if (usuariosRegistrados.containsKey(correo) && usuariosRegistrados.get(correo).equals(contraseña)) {
-                    JOptionPane.showMessageDialog(null, "¡Inicio de sesión exitoso!");
-                    mostrarMenuPrincipal();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Credenciales incorrectas. Por favor, regístrese si es un nuevo usuario.");
-                }
-            }
-        });
-
-        botonRegistrarse.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String correo = campoCorreo.getText();
-                String contraseña = new String(campoContraseña.getPassword());
-                usuariosRegistrados.put(correo, contraseña);
-                JOptionPane.showMessageDialog(null, "¡Registro exitoso! Por favor, inicie sesión con las nuevas credenciales.");
-            }
-        });
-
         JPanel panel = new JPanel();
-        panel.add(new JLabel("Correo: "));
+        panel.setLayout(null); // Usaremos un diseño absoluto
+
+        JLabel etiquetaCorreo = new JLabel("Correo: ");
+        etiquetaCorreo.setBounds(20, 20, 80, 25);
+
+        JTextField campoCorreo = new JTextField(20);
+        campoCorreo.setBounds(120, 20, 200, 25);
+
+        JLabel etiquetaContraseña = new JLabel("Contraseña: ");
+        etiquetaContraseña.setBounds(20, 50, 80, 25);
+
+        JPasswordField campoContraseña = new JPasswordField(20);
+        campoContraseña.setBounds(120, 50, 200, 25);
+
+        JButton botonIniciarSesion = new JButton("Iniciar Sesión");
+        botonIniciarSesion.setBounds(20, 100, 150, 30);
+
+        JButton botonRegistrarse = new JButton("Registrarse");
+        botonRegistrarse.setBounds(200, 100, 120, 30);
+
+        botonIniciarSesion.addActionListener(e -> {
+            String correo = campoCorreo.getText();
+            String contraseña = new String(campoContraseña.getPassword());
+
+            if (usuariosRegistrados.containsKey(correo) && usuariosRegistrados.get(correo).equals(contraseña)) {
+                JOptionPane.showMessageDialog(null, "¡Inicio de sesión exitoso!");
+                mostrarMenuPrincipal();
+            } else {
+                JOptionPane.showMessageDialog(null, "Credenciales incorrectas. Por favor, regístrese si es un nuevo usuario.");
+            }
+        });
+
+        botonRegistrarse.addActionListener(e -> {
+            String correo = campoCorreo.getText();
+            String contraseña = new String(campoContraseña.getPassword());
+            usuariosRegistrados.put(correo, contraseña);
+            JOptionPane.showMessageDialog(null, "¡Registro exitoso! Por favor, inicie sesión con las nuevas credenciales.");
+        });
+
+        panel.add(etiquetaCorreo);
         panel.add(campoCorreo);
-        panel.add(new JLabel("Contraseña: "));
+        panel.add(etiquetaContraseña);
         panel.add(campoContraseña);
         panel.add(botonIniciarSesion);
         panel.add(botonRegistrarse);
@@ -71,35 +84,36 @@ public class InterfazInicioSesion {
 
         JButton botonEnviarPaquete = new JButton("Enviar Paquete");
         JButton botonObservaciones = new JButton("Observaciones");
-
         botonEnviarPaquete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mostrarVentanaEnviarPaquete();
             }
         });
-
+    
         botonObservaciones.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mostrarVentanaObservaciones();
             }
         });
-
-        JPanel panelMenu = new JPanel();
+        JPanel panelMenu = new JPanel(new GridLayout(3, 1)); // 3 filas y 1 columna
+        JLabel labelPregunta = new JLabel("¿Qué deseas realizar hoy?");
+        labelPregunta.setHorizontalAlignment(SwingConstants.CENTER); // Centrar la pregunta
+        panelMenu.add(labelPregunta);
         panelMenu.add(botonEnviarPaquete);
         panelMenu.add(botonObservaciones);
-
-        ventanaInicio.add(panelMenu);
+    
+        // Añadir el panel al centro de la ventana y hacerla visible
+        ventanaInicio.add(panelMenu, BorderLayout.CENTER);
         ventanaInicio.setVisible(true);
     }
-
     public void mostrarVentanaEnviarPaquete() {
         JFrame ventanaEnviarPaquete = new JFrame("Enviar Paquete");
         ventanaEnviarPaquete.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        ventanaEnviarPaquete.setSize(400, 300);
+        ventanaEnviarPaquete.setSize(600, 400);
         ventanaEnviarPaquete.setLocationRelativeTo(null);
-
+    
         JTextField campoDepartamento = new JTextField(20);
         JTextField campoProvincia = new JTextField(20);
         JTextField campoDistrito = new JTextField(20);
@@ -108,7 +122,7 @@ public class InterfazInicioSesion {
         JTextField campoLargo = new JTextField(10);
         JTextField campoAncho = new JTextField(10);
         JTextField campoAlto = new JTextField(10);
-
+    
         JButton botonEnviar = new JButton("Enviar");
         botonEnviar.addActionListener(new ActionListener() {
             @Override
@@ -118,35 +132,41 @@ public class InterfazInicioSesion {
                 ventanaEnviarPaquete.dispose();
             }
         });
-
-        JPanel panelEnviarPaquete = new JPanel();
-        panelEnviarPaquete.add(new JLabel("Departamento:"));
-        panelEnviarPaquete.add(campoDepartamento);
-        panelEnviarPaquete.add(new JLabel("Provincia:"));
-        panelEnviarPaquete.add(campoProvincia);
-        panelEnviarPaquete.add(new JLabel("Distrito:"));
-        panelEnviarPaquete.add(campoDistrito);
-        panelEnviarPaquete.add(new JLabel("Destino:"));
-        panelEnviarPaquete.add(campoDestino);
-        panelEnviarPaquete.add(new JLabel("Peso (kg):"));
-        panelEnviarPaquete.add(campoPeso);
-        panelEnviarPaquete.add(new JLabel("Largo:"));
-        panelEnviarPaquete.add(campoLargo);
-        panelEnviarPaquete.add(new JLabel("Ancho:"));
-        panelEnviarPaquete.add(campoAncho);
-        panelEnviarPaquete.add(new JLabel("Alto:"));
-        panelEnviarPaquete.add(campoAlto);
-        panelEnviarPaquete.add(botonEnviar);
-
+    
+        JPanel panelEnviarPaquete = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+    
+        panelEnviarPaquete.add(new JLabel("Departamento:"), gbc);
+        panelEnviarPaquete.add(campoDepartamento, gbc);
+        panelEnviarPaquete.add(new JLabel("Provincia:"), gbc);
+        panelEnviarPaquete.add(campoProvincia, gbc);
+        panelEnviarPaquete.add(new JLabel("Distrito:"), gbc);
+        panelEnviarPaquete.add(campoDistrito, gbc);
+        panelEnviarPaquete.add(new JLabel("Destino:"), gbc);
+        panelEnviarPaquete.add(campoDestino, gbc);
+        panelEnviarPaquete.add(new JLabel("Peso (kg):"), gbc);
+        panelEnviarPaquete.add(campoPeso, gbc);
+        panelEnviarPaquete.add(new JLabel("Largo:"), gbc);
+        panelEnviarPaquete.add(campoLargo, gbc);
+        panelEnviarPaquete.add(new JLabel("Ancho:"), gbc);
+        panelEnviarPaquete.add(campoAncho, gbc);
+        panelEnviarPaquete.add(new JLabel("Alto:"), gbc);
+        panelEnviarPaquete.add(campoAlto, gbc);
+        panelEnviarPaquete.add(botonEnviar, gbc);
+    
         ventanaEnviarPaquete.add(panelEnviarPaquete);
         ventanaEnviarPaquete.setVisible(true);
     }
-
+    
     private double calcularMontoAPagar() {
         // Lógica para calcular el monto a pagar
         // Esta es una implementación de ejemplo, puedes modificarla según tus requerimientos
         return 20.50; // Simulación de monto
     }
+    
+    
 
     public void mostrarVentanaPago(double montoAPagar) {
         JFrame ventanaPago = new JFrame("Pago");
@@ -234,6 +254,7 @@ public class InterfazInicioSesion {
         ventanaConfirmacion.add(panelConfirmacion);
         ventanaConfirmacion.setVisible(true);
     }
+//pipipip
     public void mostrarVentanaObservaciones() {
         JFrame ventanaObservaciones = new JFrame("Observaciones");
         ventanaObservaciones.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
